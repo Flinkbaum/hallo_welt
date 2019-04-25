@@ -26,13 +26,23 @@ const double eps=1e-0;
 static int n;
 static ll** busplan;
 
+void print_mat()
+{
+    int i, j;
+    for (i = 0; i < n; ++i)
+    {
+        for (j = 0; j < n; ++j){
+		cout << busplan[i][j] << " ";
+	}
+	cout << endl;
+    }
+}
+
 static void mod_plan_cheap_next(){
 	FOR(i, 0, n){
 		FOR(j, i + 1, n){
-			if(busplan[i][j] == 0) break;
 			if(busplan[i][j] == -1) continue;
-			FORD(k, 0, j){
-				if(busplan[i][k] == 0) break;
+			FORD(k, i + 1, j){
 				if(busplan[i][k] > busplan[i][j] || busplan[i][k] == -1)
 					busplan[i][k] = busplan[i][j];
 				else 
@@ -46,12 +56,22 @@ static void dp(){
 	mod_plan_cheap_next();
 	FOR(i, 2, n){
 		FOR(j, 1, i){
-			if(busplan[j][i] == -1) break;
+			if(busplan[j][i] == -1) continue;
 			ll next = busplan[0][j] + busplan[j][i];
 			if(busplan[0][i] == -1 || next < busplan[0][i])
 				busplan[0][i] = next;
 		}
 	}
+	//FOR(i,1,n-1){
+	//	ll temp = busplan[0][i];
+	//	FOR(j, i + 1, n){
+	//		if(busplan[i][j] == -1) break;
+	//		ll next = temp + busplan[i][j];
+	//		if(busplan[0][j] == -1 || next < busplan[0][j]){
+	//			busplan[0][j] = next;
+	//		}
+	//	}
+	//}
 	if(busplan[0][n-1] == -1){
 		cout << "Impossible" << endl;
 		return;
